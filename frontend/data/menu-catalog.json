@@ -1,0 +1,23 @@
+{
+  "extras": [
+    {
+      "id": "admin-93a53993-bf51-4069-8e08-d73b98cf98d6",
+      "name": "Marinda",
+      "slug": "marinda",
+      "description": "Orange Marinda 330ml.",
+      "ingredients": ["Carbonated water", "Orange"],
+      "allergens": [],
+      "price": 150,
+      "calories": 145,
+      "prepTimeMinutes": 1,
+      "imageUrl": "/images/menu/marinda.jpg",
+      "categorySlug": "drinks",
+      "categoryName": "Drinks",
+      "isHalal": true,
+      "isAvailable": true,
+      "isNew": true
+    }
+  ],
+  "overrides": {},
+  "removedIds": []
+}

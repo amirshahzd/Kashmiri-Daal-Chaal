@@ -1,0 +1,87 @@
+{
+  "orders": [
+    {
+      "id": "KDC-28720392",
+      "user_id": "48d8e0dd-aa37-4e7a-bae5-c7ee7170cee5",
+      "customer_id": "3e8173dd-3e34-45b2-864e-ebaebb9c981c",
+      "status": "received",
+      "paymentStatus": "paid",
+      "orderType": "delivery",
+      "subtotal": 1355,
+      "discount": 0,
+      "tax": 68,
+      "deliveryFee": 150,
+      "total": 1573,
+      "couponCode": null,
+      "loyaltyPointsEarned": 15,
+      "loyaltyPointsRedeemed": 0,
+      "specialInstructions": null,
+      "items": [
+        {
+          "name": "Chicken Pulao",
+          "quantity": 1,
+          "unitPrice": 495,
+          "lineTotal": 495,
+          "imageUrl": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=1200&q=80"
+        },
+        {
+          "name": "Shami Kebab",
+          "quantity": 2,
+          "unitPrice": 380,
+          "lineTotal": 760,
+          "imageUrl": "/images/menu/shami-kebab.jpg"
+        },
+        {
+          "name": "Coca-Cola",
+          "quantity": 1,
+          "unitPrice": 100,
+          "lineTotal": 100,
+          "imageUrl": "/images/menu/coca-cola.jpg"
+        }
+      ],
+      "createdAt": "2026-08-06T15:05:25.480Z",
+      "payment": "EasyPaisa",
+      "paymentRef": "EASYPAISA-CONFIRMED-725416",
+      "customerName": "amir shahzad",
+      "customerPhone": "03008408046",
+      "deliveryAddress": "50 hill side sl12rw, Lahore, SL12RW, Pakistan",
+      "tableNumber": null,
+      "restaurant": "Kashmiri Daal Chawal",
+      "restaurantAddress": "Hall Road, Lahore, Pakistan",
+      "restaurantPhone": "+92 42 3575 0000"
+    },
+    {
+      "id": "KDC-TEST001",
+      "user_id": "1f5cbd02-7862-45a8-8ae1-ba6ef316f803",
+      "customer_id": "f866ef93-8745-43de-a452-5cd76cdeb271",
+      "status": "received",
+      "paymentStatus": "cod",
+      "orderType": "takeaway",
+      "subtotal": 2500,
+      "discount": 0,
+      "tax": 125,
+      "deliveryFee": 0,
+      "total": 2625,
+      "couponCode": null,
+      "loyaltyPointsEarned": 26,
+      "loyaltyPointsRedeemed": 0,
+      "specialInstructions": null,
+      "items": [
+        {
+          "unitPrice": 250,
+          "quantity": 2,
+          "name": "Boiled Rice",
+          "lineTotal": 500
+        }
+      ],
+      "createdAt": "2026-08-06T12:20:21.383Z",
+      "payment": "Cash",
+      "paymentRef": null,
+      "customerName": "Test Customer",
+      "customerPhone": "03001234567",
+      "deliveryAddress": "Hall Road, Lahore",
+      "tableNumber": null,
+      "restaurant": "KDC"
+    }
+  ]
+}

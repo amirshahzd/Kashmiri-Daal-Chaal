@@ -1,0 +1,991 @@
+@import "tailwindcss";
+
+:root {
+  --kdc-crimson: #b91c1c;
+  --kdc-crimson-deep: #7f1d1d;
+  --kdc-gold: #c9a227;
+  --kdc-gold-soft: #e8c547;
+  --kdc-ivory: #fffaf5;
+  --kdc-ink: #1a0f0f;
+  --kdc-muted: #6b4f4f;
+  --kdc-surface: #ffffff;
+  --kdc-border: rgba(185, 28, 28, 0.12);
+  --background: var(--kdc-ivory);
+  --foreground: var(--kdc-ink);
+}
+
+.dark {
+  --kdc-ivory: #140b0b;
+  --kdc-ink: #f8ebe6;
+  --kdc-muted: #c4a8a8;
+  --kdc-surface: #1f1212;
+  --kdc-border: rgba(201, 162, 39, 0.18);
+  --background: #0f0808;
+  --foreground: #f8ebe6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-crimson: var(--kdc-crimson);
+  --color-crimson-deep: var(--kdc-crimson-deep);
+  --color-gold: var(--kdc-gold);
+  --color-gold-soft: var(--kdc-gold-soft);
+  --color-ivory: var(--kdc-ivory);
+  --color-ink: var(--kdc-ink);
+  --color-muted: var(--kdc-muted);
+  --color-surface: var(--kdc-surface);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), Georgia, serif;
+  min-height: 100vh;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--kdc-gold) 45%, transparent);
+  color: var(--kdc-ink);
+}
+
+.kdc-grain {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(201, 162, 39, 0.18), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(185, 28, 28, 0.16), transparent 50%),
+    linear-gradient(180deg, rgba(255, 250, 245, 0.95), rgba(255, 250, 245, 1));
+}
+
+.dark .kdc-grain {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(201, 162, 39, 0.12), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(185, 28, 28, 0.22), transparent 50%),
+    linear-gradient(180deg, #140b0b, #0f0808);
+}
+
+.kdc-hero-overlay {
+  background:
+    linear-gradient(105deg, rgba(20, 8, 8, 0.88) 0%, rgba(20, 8, 8, 0.55) 45%, rgba(20, 8, 8, 0.25) 100%),
+    linear-gradient(0deg, rgba(20, 8, 8, 0.65), transparent 40%);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, -40px) rotateX(12deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotateX(0deg);
+  }
+}
+
+@keyframes shimmer-gold {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.animate-rise {
+  animation: rise-in 0.8s ease-out both;
+}
+
+.animate-rise-delay {
+  animation: rise-in 0.9s ease-out 0.15s both;
+}
+
+.gold-text {
+  background: linear-gradient(120deg, #c9a227, #f0d878, #c9a227);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-gold 4s linear infinite;
+}
+
+.kdc-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.9rem;
+  padding: 0.85rem 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  position: relative;
+  border: none;
+  cursor: pointer;
+  transform: translateY(0) scale(1);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    filter 0.15s ease,
+    background 0.2s ease;
+  /* Default 3D raised / pressed look */
+  box-shadow:
+    0 5px 0 rgba(0, 0, 0, 0.22),
+    0 10px 18px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.kdc-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+}
+
+.kdc-button:active:not(:disabled) {
+  transform: translateY(4px) scale(0.98);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.28),
+    0 2px 6px rgba(0, 0, 0, 0.16),
+    inset 0 3px 8px rgba(0, 0, 0, 0.28);
+}
+
+.kdc-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.kdc-button-primary {
+  background: linear-gradient(180deg, #d42a2a 0%, var(--kdc-crimson) 45%, var(--kdc-crimson-deep) 100%);
+  color: white;
+  box-shadow:
+    0 5px 0 #5c1010,
+    0 10px 22px rgba(185, 28, 28, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.kdc-button-primary:active:not(:disabled) {
+  box-shadow:
+    0 1px 0 #5c1010,
+    inset 0 3px 8px rgba(0, 0, 0, 0.35);
+}
+
+.kdc-button-gold {
+  background: linear-gradient(180deg, #e8c547 0%, var(--kdc-gold) 50%, #a8861a 100%);
+  color: #1a0f0f;
+  box-shadow:
+    0 5px 0 #6d5610,
+    0 10px 20px rgba(201, 162, 39, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.12);
+}
+
+.kdc-button-gold:active:not(:disabled) {
+  box-shadow:
+    0 1px 0 #6d5610,
+    inset 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+.kdc-button-ghost {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  color: white;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.25),
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.kdc-button-ghost:active:not(:disabled) {
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.3),
+    inset 0 3px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Universal 3D pressed buttons across the app (excludes pure text-link styles) */
+button:not(.kdc-button):not(:disabled),
+input[type='submit']:not(:disabled),
+input[type='button']:not(:disabled) {
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    filter 0.15s ease;
+}
+
+button:not(.kdc-button):not(:disabled):not([aria-label*='oggle']):active,
+input[type='submit']:not(:disabled):active,
+input[type='button']:not(:disabled):active {
+  transform: translateY(2px) scale(0.98);
+}
+
+/* Rounded pill/header controls still read as tactile 3D chips */
+header button,
+header a[class*='rounded-full'],
+.kdc-button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Print: flatten 3D so slips stay clean */
+@media print {
+  .kdc-button,
+  button {
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  [data-tooltip]::after,
+  [data-tooltip]::before {
+    display: none !important;
+  }
+}
+
+/* ——— Navigation tooltips (links & buttons) ——— */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) translateY(4px);
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.45rem;
+  background: #1a0f0f;
+  color: #fffaf5;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+  max-width: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 200;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease,
+    visibility 0.12s ease;
+}
+
+[data-tooltip]::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1a0f0f;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 200;
+  transition:
+    opacity 0.15s ease,
+    visibility 0.15s ease;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after,
+[data-tooltip]:hover::before,
+[data-tooltip]:focus-visible::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Prefer tooltips below when near top of viewport (e.g. sticky header) */
+header [data-tooltip]::after,
+[data-tooltip-pos='bottom']::after {
+  bottom: auto;
+  top: calc(100% + 10px);
+  transform: translateX(-50%) translateY(-4px);
+}
+
+header [data-tooltip]::before,
+[data-tooltip-pos='bottom']::before {
+  bottom: auto;
+  top: calc(100% + 4px);
+  border-top-color: transparent;
+  border-bottom-color: #1a0f0f;
+}
+
+header [data-tooltip]:hover::after,
+header [data-tooltip]:focus-visible::after,
+[data-tooltip-pos='bottom']:hover::after,
+[data-tooltip-pos='bottom']:focus-visible::after {
+  transform: translateX(-50%) translateY(0);
+}
+
+.dark [data-tooltip]::after {
+  background: #2a1818;
+  color: #fffaf5;
+  border: 1px solid rgba(201, 162, 39, 0.25);
+}
+
+.dark header [data-tooltip]::before,
+.dark [data-tooltip-pos='bottom']::before {
+  border-bottom-color: #2a1818;
+}
+
+.dark [data-tooltip]::before {
+  border-top-color: #2a1818;
+}
+
+/* Print only the attendance register sheet (hide admin chrome, nav, other tabs) */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
+  html,
+  body {
+    background: white !important;
+    color: black !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #attendance-print-area,
+  #attendance-print-area *,
+  #payroll-print-area,
+  #payroll-print-area * {
+    visibility: visible !important;
+  }
+
+  #attendance-print-area,
+  #payroll-print-area {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .print-hide {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  #attendance-print-area table,
+  #payroll-print-area table {
+    min-width: 0 !important;
+    width: 100% !important;
+    font-size: 11px !important;
+  }
+
+  #attendance-print-area input[type='time'] {
+    border: 1px solid #ccc !important;
+    color: black !important;
+  }
+}
+
+/* ---- Universal 3D image frame (all photos + admin-added URLs) ---- */
+.kdc-img-3d {
+  isolation: isolate;
+  perspective: 1100px;
+  perspective-origin: 50% 42%;
+  transform-style: preserve-3d;
+}
+
+.kdc-img-3d-stage,
+.kdc-img-3d-plane {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.kdc-img-3d-plane {
+  overflow: hidden;
+  transform: rotateX(7deg) rotateY(-5deg) translateZ(0);
+  border-radius: inherit;
+  box-shadow:
+    0 22px 44px rgba(26, 15, 15, 0.32),
+    0 6px 14px rgba(26, 15, 15, 0.18),
+    0 0 0 1px rgba(201, 162, 39, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  animation: kdc-img-3d-float 7.5s ease-in-out infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.kdc-img-3d-plane > img,
+.kdc-img-3d-plane span:where([data-nimg='fill'], [data-nimg='fixed']) {
+  transform: translateZ(1px) scale(1.04);
+}
+
+.kdc-img-3d-shine {
+  pointer-events: none;
+  position: absolute;
+  inset: -20%;
+  z-index: 3;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.14) 46%,
+    rgba(255, 248, 220, 0.28) 50%,
+    rgba(255, 255, 255, 0.1) 54%,
+    transparent 62%
+  );
+  mix-blend-mode: soft-light;
+  animation: kdc-img-3d-shine 6.5s ease-in-out infinite;
+  transform: translateZ(12px);
+}
+
+.kdc-img-3d-depth {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.16) 0%, transparent 42%),
+    linear-gradient(0deg, rgba(26, 15, 15, 0.28) 0%, transparent 48%);
+  box-shadow: inset 0 0 40px rgba(26, 15, 15, 0.18);
+  transform: translateZ(6px);
+}
+
+@keyframes kdc-img-3d-float {
+  0%,
+  100% {
+    transform: rotateX(7deg) rotateY(-5deg) translateZ(0) translateY(0);
+  }
+  50% {
+    transform: rotateX(3deg) rotateY(4deg) translateZ(14px) translateY(-4px);
+  }
+}
+
+@keyframes kdc-img-3d-shine {
+  0%,
+  100% {
+    transform: translate3d(-18%, 0, 12px) rotate(0deg);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate3d(18%, 4%, 12px) rotate(2deg);
+    opacity: 0.9;
+  }
+}
+
+.kdc-img-3d--compact .kdc-img-3d-plane {
+  transform: rotateX(5deg) rotateY(-4deg);
+  animation-duration: 9s;
+  box-shadow:
+    0 12px 24px rgba(26, 15, 15, 0.28),
+    0 0 0 1px rgba(201, 162, 39, 0.2);
+}
+
+.kdc-img-3d--compact:hover .kdc-img-3d-plane,
+.kdc-img-3d--default:hover .kdc-img-3d-plane {
+  animation-play-state: paused;
+  transform: rotateX(1deg) rotateY(0deg) translateZ(18px) translateY(-3px);
+  transition: transform 0.4s ease;
+}
+
+.kdc-img-3d--avatar .kdc-img-3d-plane {
+  transform: rotateX(4deg) rotateY(-3deg);
+  animation-duration: 10s;
+  border-radius: inherit;
+}
+
+.kdc-img-3d--hero {
+  perspective: 1600px;
+}
+
+.kdc-img-3d--hero .kdc-img-3d-plane {
+  transform: rotateX(2deg) scale(1.02);
+  animation: kdc-img-3d-hero 14s ease-in-out infinite;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.kdc-img-3d--hero .kdc-img-3d-shine {
+  opacity: 0.35;
+  animation-duration: 12s;
+}
+
+@keyframes kdc-img-3d-hero {
+  0%,
+  100% {
+    transform: rotateX(2deg) rotateY(-1deg) scale(1.03) translateZ(0);
+  }
+  50% {
+    transform: rotateX(0deg) rotateY(1.2deg) scale(1.06) translateZ(8px);
+  }
+}
+
+/* ---- Menu banner 3D views ---- */
+@keyframes kdc-menu-view-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) rotateX(8deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg);
+  }
+}
+
+.kdc-menu-view-enter {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  animation: kdc-menu-view-in 0.55s ease-out both;
+}
+
+.kdc-card-3d {
+  transform: perspective(900px) rotateX(4deg) translateZ(0);
+  transform-style: preserve-3d;
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.35),
+    0 2px 0 rgba(201, 162, 39, 0.25);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.kdc-card-3d:hover {
+  transform: perspective(900px) rotateX(0deg) translateY(-6px) translateZ(24px);
+  box-shadow:
+    0 28px 50px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(201, 162, 39, 0.35);
+}
+
+@keyframes kdc-banner-glow {
+  0%,
+  100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(12px, -8px) scale(1.08); }
+}
+
+.kdc-menu-banner-glow {
+  animation: kdc-banner-glow 8s ease-in-out infinite;
+}
+
+/* ---- 3D amend / inventory modal ---- */
+.kdc-panel-3d {
+  transform: perspective(1200px) rotateX(2deg) translateZ(0);
+  transform-style: preserve-3d;
+  box-shadow:
+    0 30px 60px rgba(26, 15, 15, 0.35),
+    0 0 0 1px rgba(201, 162, 39, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(10px);
+}
+
+/* Stock menu dropdowns: black bold text on white (readable options) */
+.kdc-stock-select {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--kdc-border, #d4c4b0);
+  background: #ffffff !important;
+  color: #111111 !important;
+  font-weight: 700 !important;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color-scheme: light;
+}
+
+.kdc-stock-select option {
+  background: #ffffff;
+  color: #111111;
+  font-weight: 700;
+}
+
+.kdc-stock-input {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--kdc-border, #d4c4b0);
+  background: #ffffff !important;
+  color: #111111 !important;
+  font-weight: 700 !important;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* ---- Admin rice rain (3D) ---- */
+.kdc-rice-rain {
+  perspective: 900px;
+  perspective-origin: 50% 0%;
+}
+
+.kdc-rice-stage {
+  transform-style: preserve-3d;
+}
+
+.kdc-rice-grain {
+  position: absolute;
+  top: -12%;
+  border-radius: 50% / 38%;
+  background: linear-gradient(
+    145deg,
+    #fff8e8 0%,
+    #f5e0a8 35%,
+    #e8c878 70%,
+    #c9a050 100%
+  );
+  border: 1px solid rgba(255, 248, 220, 0.55);
+  box-shadow:
+    inset -1px -2px 3px rgba(90, 60, 20, 0.4),
+    0 0 8px rgba(255, 235, 180, 0.65),
+    0 1px 3px rgba(0, 0, 0, 0.25);
+  transform: translateZ(calc(var(--rice-depth, 0.5) * 80px)) rotateZ(var(--rice-rot, 0deg));
+  animation-name: kdc-rice-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes kdc-rice-fall {
+  0% {
+    transform: translate3d(0, -10vh, calc(var(--rice-depth, 0.5) * 80px))
+      rotateZ(var(--rice-rot, 0deg)) rotateY(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(18px, 110vh, calc(var(--rice-depth, 0.5) * -40px))
+      rotateZ(calc(var(--rice-rot, 0deg) + 220deg)) rotateY(180deg);
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kdc-rice-grain,
+  .kdc-menu-banner-glow,
+  .kdc-menu-view-enter,
+  .gold-text,
+  .kdc-smoke,
+  .kdc-smoke-bank,
+  .kdc-drip,
+  .kdc-img-3d-plane,
+  .kdc-img-3d-shine {
+    animation: none !important;
+  }
+
+  .kdc-img-3d-plane {
+    transform: none !important;
+  }
+}
+
+.kdc-food-smoke,
+.kdc-drink-drips {
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+.kdc-plate-zone,
+.kdc-drink-body {
+  transform-style: preserve-3d;
+}
+
+/* Food sits mid-frame in most plate photos — steam emitter lives here */
+.kdc-plate-zone {
+  position: absolute;
+  left: 16%;
+  width: 68%;
+  top: 36%;
+  height: 40%;
+  overflow: visible;
+}
+
+/* Soft haze sitting on the food surface */
+.kdc-smoke-bank {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 8%;
+  height: 55%;
+  background: radial-gradient(
+      ellipse 80% 70% at 50% 80%,
+      rgba(255, 255, 255, 0.75) 0%,
+      rgba(230, 235, 240, 0.35) 45%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 40% 50% at 32% 70%,
+      rgba(255, 255, 255, 0.55) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 38% 48% at 68% 75%,
+      rgba(245, 248, 255, 0.5) 0%,
+      transparent 68%
+    );
+  filter: blur(7px);
+  animation: kdc-smoke-bank-pulse 3s ease-in-out infinite;
+  will-change: opacity, transform;
+  transform-origin: 50% 100%;
+}
+
+@keyframes kdc-smoke-bank-pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1, 1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04, 1.1);
+  }
+}
+
+/* Billows start ON the food and blow upward from there */
+.kdc-smoke {
+  position: absolute;
+  bottom: 12%;
+  width: 44%;
+  height: 140%;
+  border-radius: 45% 45% 35% 35%;
+  background: radial-gradient(
+    ellipse 55% 58% at 50% 70%,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(232, 238, 244, 0.7) 30%,
+    rgba(200, 210, 220, 0.28) 58%,
+    transparent 78%
+  );
+  filter: blur(11px);
+  opacity: 0;
+  animation: kdc-smoke-from-food 4.2s ease-out infinite;
+  will-change: transform, opacity, filter;
+  transform-origin: 50% 90%;
+}
+
+.kdc-smoke-thick {
+  width: 58%;
+  height: 155%;
+  filter: blur(13px);
+  background: radial-gradient(
+    ellipse 52% 56% at 50% 68%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(220, 228, 235, 0.78) 32%,
+    rgba(180, 190, 200, 0.32) 58%,
+    transparent 78%
+  );
+}
+
+.kdc-smoke-1 {
+  left: 8%;
+  animation-delay: 0s;
+}
+
+.kdc-smoke-2 {
+  left: 28%;
+  width: 50%;
+  animation-delay: 0.5s;
+  animation-duration: 4.5s;
+}
+
+.kdc-smoke-3 {
+  left: 42%;
+  animation-delay: 1s;
+  animation-duration: 4s;
+}
+
+.kdc-smoke-4 {
+  left: 52%;
+  width: 40%;
+  animation-delay: 1.5s;
+  animation-duration: 4.6s;
+}
+
+.kdc-smoke-5 {
+  left: 18%;
+  width: 48%;
+  animation-delay: 2s;
+  animation-duration: 4.3s;
+}
+
+.kdc-smoke-6 {
+  left: 38%;
+  animation-delay: 2.5s;
+  animation-duration: 4.8s;
+}
+
+.kdc-smoke-7 {
+  left: 14%;
+  animation-delay: 0.8s;
+  animation-duration: 5s;
+}
+
+.kdc-smoke-8 {
+  left: 30%;
+  animation-delay: 1.8s;
+  animation-duration: 4.7s;
+}
+
+/* Rise from food surface only — does not start at card bottom */
+@keyframes kdc-smoke-from-food {
+  0% {
+    transform: translate3d(0, 0, 4px) scale(0.55, 0.4);
+    opacity: 0;
+    filter: blur(8px);
+  }
+  10% {
+    opacity: 0.92;
+  }
+  30% {
+    opacity: 1;
+    transform: translate3d(-3%, -35%, 18px) scale(0.9, 0.85);
+    filter: blur(11px);
+  }
+  55% {
+    opacity: 0.75;
+    transform: translate3d(4%, -70%, 28px) scale(1.15, 1.2);
+    filter: blur(15px);
+  }
+  80% {
+    opacity: 0.35;
+    transform: translate3d(-2%, -105%, 36px) scale(1.35, 1.45);
+    filter: blur(18px);
+  }
+  100% {
+    transform: translate3d(3%, -140%, 44px) scale(1.5, 1.65);
+    opacity: 0;
+    filter: blur(22px);
+  }
+}
+
+/* ---- Cold drinks: condensation drips on the drink surface (not sky rain) ---- */
+.kdc-drink-drips {
+  overflow: hidden;
+}
+
+/* Approximate glass / bottle in center of most drink photos */
+.kdc-drink-body {
+  position: absolute;
+  left: 26%;
+  width: 48%;
+  top: 20%;
+  height: 62%;
+  overflow: hidden;
+  border-radius: 40% 40% 28% 28% / 12% 12% 38% 38%;
+}
+
+.kdc-drip {
+  position: absolute;
+  top: 10%;
+  width: 5px;
+  height: 22%;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(200, 230, 255, 0.98) 28%,
+    rgba(150, 205, 255, 0.9) 65%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  box-shadow:
+    0 0 8px rgba(190, 225, 255, 0.75),
+    0 0 2px rgba(255, 255, 255, 0.9);
+  animation: kdc-drip-on-drink 4.2s ease-in infinite;
+  will-change: transform, opacity;
+  opacity: 0;
+}
+
+.kdc-drip-1 {
+  left: 18%;
+  animation-delay: 0s;
+  animation-duration: 4s;
+}
+
+.kdc-drip-2 {
+  left: 32%;
+  width: 4px;
+  height: 20%;
+  animation-delay: 0.7s;
+  animation-duration: 4.6s;
+}
+
+.kdc-drip-3 {
+  left: 48%;
+  width: 5.5px;
+  animation-delay: 1.4s;
+  animation-duration: 4.1s;
+}
+
+.kdc-drip-4 {
+  left: 62%;
+  width: 4.5px;
+  animation-delay: 0.35s;
+  animation-duration: 4.8s;
+}
+
+.kdc-drip-5 {
+  left: 74%;
+  width: 5px;
+  height: 18%;
+  animation-delay: 1.9s;
+  animation-duration: 4.2s;
+}
+
+.kdc-drip-6 {
+  left: 24%;
+  top: 18%;
+  width: 4px;
+  height: 16%;
+  animation-delay: 2.4s;
+  animation-duration: 4.5s;
+}
+
+.kdc-drip-7 {
+  left: 55%;
+  top: 14%;
+  width: 5px;
+  height: 20%;
+  animation-delay: 1s;
+  animation-duration: 4.9s;
+}
+
+.kdc-drip-8 {
+  left: 40%;
+  top: 8%;
+  width: 4.5px;
+  height: 15%;
+  animation-delay: 2.9s;
+  animation-duration: 3.8s;
+}
+
+/* Short travel down the glass only — not full-frame rain */
+@keyframes kdc-drip-on-drink {
+  0% {
+    transform: translate3d(0, 0, 10px) scaleY(0.6);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.95;
+  }
+  70% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(0, 220%, 4px) scaleY(1.05);
+    opacity: 0;
+  }
+}
+
