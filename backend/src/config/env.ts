@@ -16,7 +16,7 @@ export const env = {
   appName: process.env.APP_NAME ?? 'Kashmiri Daal Chawal',
   appUrl: process.env.APP_URL ?? 'http://localhost:3000',
   apiUrl: process.env.API_URL ?? 'http://localhost:4000',
-  port: Number(process.env.API_PORT ?? 4000),
+  port: Number(process.env.PORT ?? process.env.API_PORT ?? 4000),
   databaseUrl: required('DATABASE_URL', 'postgresql://kdc:kdc_secret@localhost:5432/kashmiri_daal_chawal'),
   jwtAccessSecret: required('JWT_ACCESS_SECRET', 'dev-access-secret-change-in-production-32'),
   jwtRefreshSecret: required('JWT_REFRESH_SECRET', 'dev-refresh-secret-change-in-production-32'),
