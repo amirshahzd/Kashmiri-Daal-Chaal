@@ -6,6 +6,7 @@ import { formatGBP, itemPrice, type MenuItem } from '@/lib/data';
 import { getLiveMenuItems, ensureMenuCatalogHydrated } from '@/lib/menu-catalog';
 import { MenuImageFx } from '@/components/MenuImageFx';
 import { AddToCartButton } from './AddToCartButton';
+import Link from 'next/link';
 
 export default function MenuItemPage({
   params,
@@ -35,9 +36,9 @@ export default function MenuItemPage({
     return (
       <p className="px-4 py-16 text-center text-sm text-muted">
         Dish not found.{' '}
-        <a href="/menu" className="text-crimson underline">
+        <Link href="/menu" className="text-crimson underline">
           Back to menu
-        </a>
+        </Link>
       </p>
     );
   }
