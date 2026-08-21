@@ -12,11 +12,18 @@ RUN mkdir -p public && npm run build
 
 FROM node:20-alpine AS runner
 WORKDIR /app
+
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=10000
+ENV HOSTNAME=0.0.0.0
+
 RUN mkdir -p public
+
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-EXPOSE 3000
+
+EXPOSE 10000
+
 CMD ["node", "server.js"]
