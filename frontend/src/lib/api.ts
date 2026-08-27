@@ -1,4 +1,6 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  'https://kashmiri-daal-chawal.onrender.com/api/v1';
 
 type ApiResult<T> = { success: true; data: T } | { success: false; error: { message: string; code?: string; details?: unknown } };
 
