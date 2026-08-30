@@ -195,12 +195,56 @@ export function SiteHeader() {
 
   return (
     <header className="print-hide sticky top-0 z-50 border-b border-[var(--kdc-border)] bg-[color-mix(in_srgb,var(--background)_86%,transparent)] backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-6">
+      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-4 md:px-6">
+        <div className="flex items-center justify-between gap-2 md:hidden">
+          <div className="flex items-center gap-2">
+            <Suspense fallback={null}>
+              <BackButton className="shrink-0" />
+            </Suspense>
+            <HomeButton className="shrink-0" />
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              aria-label={dark ? 'Light mode' : 'Dark mode'}
+              data-tooltip={dark ? 'Light' : 'Dark'}
+              title={dark ? 'Light' : 'Dark'}
+              onClick={toggleTheme}
+              className="rounded-full border border-[var(--kdc-border)] p-2 text-ink/80 hover:text-crimson"
+            >
+              {dark ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <Link
+              href="/cart"
+              className="relative rounded-full border border-[var(--kdc-border)] p-2 text-ink/80 hover:text-crimson"
+              aria-label="Cart"
+              data-tooltip="Cart"
+              title="Cart"
+            >
+              <ShoppingBag size={18} />
+              {count > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-crimson px-1 text-[10px] font-bold text-white">
+                  {count}
+                </span>
+              )}
+            </Link>
+            <button
+              type="button"
+              className="rounded-full border border-[var(--kdc-border)] p-2 md:hidden"
+              onClick={() => setOpen((v) => !v)}
+              aria-label={open ? 'Close menu' : 'Open menu'}
+              data-tooltip={open ? 'Close' : 'Menu'}
+              title={open ? 'Close' : 'Menu'}
+            >
+              {open ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
+        </div>
         <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           <Suspense fallback={null}>
-            <BackButton className="shrink-0" />
+            <BackButton className="hidden shrink-0 md:inline-flex" />
           </Suspense>
-          <HomeButton className="shrink-0" />
+          <HomeButton className="hidden shrink-0 md:inline-flex" />
           <Link
             href="/"
             className="group flex min-w-0 flex-col leading-none"
@@ -237,7 +281,7 @@ export function SiteHeader() {
           {renderAuthControl(false)}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="hidden items-center gap-2 md:flex">
           <button
             type="button"
             aria-label={dark ? 'Light mode' : 'Dark mode'}
