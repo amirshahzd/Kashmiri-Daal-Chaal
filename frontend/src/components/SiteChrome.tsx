@@ -195,14 +195,27 @@ export function SiteHeader() {
 
   return (
     <header className="print-hide sticky top-0 z-50 border-b border-[var(--kdc-border)] bg-[color-mix(in_srgb,var(--background)_86%,transparent)] backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-4 md:px-6">
-        <div className="flex items-center justify-between gap-2 md:hidden">
+      <div className="relative mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-4 md:px-6">
+        <div className="flex min-w-0 items-center justify-between gap-2 md:hidden">
           <div className="flex items-center gap-2">
             <Suspense fallback={null}>
               <BackButton className="shrink-0" />
             </Suspense>
             <HomeButton className="shrink-0" />
           </div>
+          <Link
+            href="/"
+            className="min-w-0 flex-1 px-1 text-center leading-none"
+            data-tooltip="Home"
+            title="Home"
+          >
+            <span className="block truncate font-[family-name:var(--font-display)] text-lg text-crimson">
+              Kashmiri Daal Chawal
+            </span>
+            <span className="mt-1 block truncate text-[9px] uppercase tracking-[0.16em] text-gold">
+              Hall Road · Lahore
+            </span>
+          </Link>
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -240,7 +253,7 @@ export function SiteHeader() {
             </button>
           </div>
         </div>
-        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+        <div className="hidden min-w-0 items-center gap-2 sm:gap-3 md:flex">
           <Suspense fallback={null}>
             <BackButton className="hidden shrink-0 md:inline-flex" />
           </Suspense>
@@ -320,7 +333,7 @@ export function SiteHeader() {
       </div>
 
       {open && (
-        <nav className="flex flex-col gap-1 border-t border-[var(--kdc-border)] px-4 py-3 md:hidden">
+        <nav className="absolute left-0 right-0 top-full z-50 flex flex-col gap-1 border-y border-[var(--kdc-border)] bg-[var(--background)] px-4 py-3 shadow-xl md:hidden">
           {publicLinks.map((l) => {
             const active =
               l.href === '/'
