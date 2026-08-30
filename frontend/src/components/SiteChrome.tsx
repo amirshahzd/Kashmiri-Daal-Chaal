@@ -203,19 +203,6 @@ export function SiteHeader() {
             </Suspense>
             <HomeButton className="shrink-0" />
           </div>
-          <Link
-            href="/"
-            className="min-w-0 flex-1 px-1 text-center leading-none"
-            data-tooltip="Home"
-            title="Home"
-          >
-            <span className="block truncate font-[family-name:var(--font-display)] text-lg text-crimson">
-              Kashmiri Daal Chawal
-            </span>
-            <span className="mt-1 block truncate text-[9px] uppercase tracking-[0.16em] text-gold">
-              Hall Road · Lahore
-            </span>
-          </Link>
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -253,6 +240,16 @@ export function SiteHeader() {
             </button>
           </div>
         </div>
+        <Link
+          href="/"
+          className="block min-w-0 text-center leading-none md:hidden"
+          data-tooltip="Home"
+          title="Home"
+        >
+          <span className="block truncate font-[family-name:var(--font-display)] text-lg text-crimson">
+            Kashmiri Daal Chawal · Hall Road · Lahore
+          </span>
+        </Link>
         <div className="hidden min-w-0 items-center gap-2 sm:gap-3 md:flex">
           <Suspense fallback={null}>
             <BackButton className="hidden shrink-0 md:inline-flex" />
