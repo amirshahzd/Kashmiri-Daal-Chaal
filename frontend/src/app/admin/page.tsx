@@ -85,7 +85,6 @@ const ACCESS_LEVELS = [
   { value: 'kitchen', label: 'Kitchen' },
   { value: 'delivery', label: 'Delivery' },
   { value: 'employee', label: 'Employee' },
-  { value: 'customer', label: 'Customer only (online ordering)' },
 ] as const;
 
 const VALID_TABS = new Set(NAV.map((n) => n.id));
@@ -338,6 +337,22 @@ function AdminDashboard() {
       setSupplierErr(err instanceof ApiError ? err.message : err instanceof Error ? err.message : 'Failed');
     } finally {
       setSupplierBusy(false);
+    }
+  }
+
+  async function handleDeleteSupplier(id: string, name: string) {
+    if (!window.confirm(`Remove supplier “${name}” from the list?`)) return;
+    setSupplierErr('');
+    setSupplierMsg('');
+    try {
+      await api(`/suppliers/${id}`, {
+        method: 'DELETE',
+        token: readAuthSession()?.accessToken,
+      });
+      setSupplierMsg(`Supplier “${name}” removed.`);
+      await loadSuppliers();
+    } catch (err) {
+      setSupplierErr(err instanceof ApiError ? err.message : err instanceof Error ? err.message : 'Failed');
     }
   }
 
@@ -1679,12 +1694,13 @@ function AdminDashboard() {
                         <th>Phone</th>
                         <th>Email</th>
                         <th>City</th>
+                        <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {suppliers.length === 0 && (
                         <tr>
-                          <td colSpan={5} className="py-4 text-muted">
+                          <td colSpan={6} className="py-4 text-muted">
                             No suppliers yet — add one above.
                           </td>
                         </tr>
@@ -1696,6 +1712,15 @@ function AdminDashboard() {
                           <td>{String(s.phone || '—')}</td>
                           <td>{String(s.email || '—')}</td>
                           <td>{String(s.city || '—')}</td>
+                          <td>
+                            <button
+                              type="button"
+                              onClick={() => void handleDeleteSupplier(String(s.id), String(s.name || 'supplier'))}
+                              className="text-xs text-crimson underline"
+                            >
+                              Delete
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>

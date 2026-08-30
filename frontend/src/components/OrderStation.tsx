@@ -706,7 +706,12 @@ export function KitchenStation({ role, actor }: { role: string; actor: string })
         : res.message
     );
     if (res.ok) {
-      window.open(`/admin/print-slip/${id}?auto=1`, '_blank', 'noopener,noreferrer');
+      const returnTo = `${window.location.pathname}${window.location.search}`;
+      window.open(
+        `/admin/print-slip/${id}?auto=1&returnTo=${encodeURIComponent(returnTo)}`,
+        '_blank',
+        'noopener,noreferrer'
+      );
     }
     reload();
   }

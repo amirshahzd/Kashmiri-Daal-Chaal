@@ -8,7 +8,7 @@ import {
   validate,
 } from '../middleware';
 import * as orderService from '../services/order.service';
-import { ok, created } from '../utils/errors';
+import { AppError, ok, created } from '../utils/errors';
 import { AuthedRequest } from '../types';
 import { query } from '../config/db';
 import { param } from '../utils/params';
@@ -80,9 +80,20 @@ router.get(
 
 router.get(
   '/:id',
-  optionalAuth,
-  asyncHandler(async (req, res) => {
-    return ok(res, await orderService.getOrderById(param(req.params.id)));
+  authenticate,
+  asyncHandler(async (req: AuthedRequest, res) => {
+    const order = await orderService.getOrderById(param(req.params.id));
+    const isStaff = req.user!.roles.includes('owner') || req.user!.permissions.includes('orders.view');
+    const isOwner = order.user_id === req.user!.id;
+
+    if (!isStaff && !isOwner) {
+      const customer = await query(`SELECT id FROM customers WHERE user_id = $1`, [req.user!.id]);
+      if (!customer.rowCount || order.customer_id !== customer.rows[0].id) {
+        throw new AppError(403, 'FORBIDDEN', 'You can only view your own orders');
+      }
+    }
+
+    return ok(res, order);
   })
 );
 
@@ -115,6 +126,9 @@ router.post(
   asyncHandler(async (req: AuthedRequest, res) => {
     const existing = await orderService.getOrderById(param(req.params.id));
     const c = await query(`SELECT id FROM customers WHERE user_id = $1`, [req.user!.id]);
+    if (!c.rowCount || (existing.user_id !== req.user!.id && existing.customer_id !== c.rows[0].id)) {
+      throw new AppError(403, 'FORBIDDEN', 'You can only reorder your own orders');
+    }
     const order = await orderService.createOrder({
       orderType: existing.order_type,
       items: existing.items.map((i: { menu_item_id: string; quantity: number; special_instructions?: string }) => ({

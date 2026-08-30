@@ -71,4 +71,13 @@ export const supplierFileStore = {
     save(rows);
     return row;
   },
+
+  delete(id: string): FileSupplier {
+    const rows = ensure();
+    const index = rows.findIndex((row) => row.id === id);
+    if (index < 0) throw new Error('SUPPLIER_NOT_FOUND');
+    const [removed] = rows.splice(index, 1);
+    save(rows);
+    return removed;
+  },
 };

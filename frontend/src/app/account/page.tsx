@@ -130,6 +130,7 @@ function AccountInner() {
   const [busy, setBusy] = useState(false);
   const [showTrack, setShowTrack] = useState(false);
   const [trackOrder, setTrackOrder] = useState<LocalOrder | null>(null);
+  const [trackOrderNumber, setTrackOrderNumber] = useState('');
 
   const refreshTrackableOrder = useCallback(() => {
     const list = readLocalOrdersList();
@@ -154,7 +155,7 @@ function AccountInner() {
       ]);
       setProfile(me);
       const mapped: LocalOrder[] = (remoteOrders.orders || []).map((o) => ({
-        id: String(o.id || o.order_number || ''),
+        id: String(o.order_number || o.id || ''),
         total: Number(o.total ?? o.total_amount ?? 0),
         orderType: String(o.orderType || o.order_type || ''),
         createdAt: String(o.createdAt || o.created_at || new Date().toISOString()),
@@ -250,6 +251,14 @@ function AccountInner() {
     setShowTrack(true);
   }
 
+  function findOrderToTrack(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const requested = trackOrderNumber.trim().toLowerCase();
+    const found = orders.find((order) => order.id.toLowerCase() === requested) || null;
+    setTrackOrder(found);
+    setError(found ? '' : 'That order number was not found in your orders.');
+  }
+
   function switchMode(next: Mode) {
     setMode(next);
     setError('');
@@ -323,12 +332,7 @@ function AccountInner() {
         });
         clearAdminSession();
 
-        const successMsg =
-          result.message || 'Your account has been created successfully. You are now signed in.';
-        setMessage(successMsg);
-        setUser(result.user);
-        form.reset();
-        void loadCustomerData();
+        router.replace('/');
         return;
       }
 
@@ -485,6 +489,20 @@ function AccountInner() {
                   </button>
                 </div>
 
+                <form className="mt-4 flex flex-col gap-2 sm:flex-row" onSubmit={findOrderToTrack}>
+                  <input
+                    value={trackOrderNumber}
+                    onChange={(e) => setTrackOrderNumber(e.target.value)}
+                    className="min-w-0 flex-1 rounded-xl border border-[var(--kdc-border)] bg-surface px-4 py-3 text-sm"
+                    placeholder="Enter your order number"
+                    aria-label="Order number"
+                    required
+                  />
+                  <button type="submit" className="kdc-button kdc-button-primary">
+                    Track order
+                  </button>
+                </form>
+
                 {!trackOrder ? (
                   <p className="mt-4 text-sm text-muted">You have not placed an order yet.</p>
                 ) : (
@@ -538,26 +556,6 @@ function AccountInner() {
                 )}
               </div>
             )}
-
-            <h2 className="mt-10 font-[family-name:var(--font-display)] text-2xl">Recent orders</h2>
-            <ul className="mt-4 space-y-3">
-              {orders.length === 0 && <li className="text-sm text-muted">No orders yet.</li>}
-              {orders.slice(0, 8).map((o) => (
-                <li key={o.id} className="border-b border-[var(--kdc-border)] py-3 text-sm">
-                  <span className="font-medium">{o.id}</span>
-                  <span className="mx-2 text-muted">·</span>
-                  {formatPKR(o.total)}
-                  <span className="mx-2 text-muted">·</span>
-                  {o.orderType}
-                  {!isOrderClosedForCustomer(o.status) && (
-                    <>
-                      <span className="mx-2 text-muted">·</span>
-                      <span className="text-crimson">{labelStatus(o.status || 'received')}</span>
-                    </>
-                  )}
-                </li>
-              ))}
-            </ul>
 
             <p className="mt-8">
               <Link href="/order" className="text-sm text-crimson underline">
@@ -651,7 +649,7 @@ function AccountInner() {
         )}
       </div>
 
-      <form onSubmit={(e) => void onSubmit(e)} className="mt-8 space-y-4">
+      <form key={mode} onSubmit={(e) => void onSubmit(e)} className="mt-8 space-y-4">
         {mode === 'register' && (
           <>
             <div className="grid gap-3 sm:grid-cols-2">

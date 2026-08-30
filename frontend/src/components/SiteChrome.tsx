@@ -37,6 +37,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const [customerLoggedIn, setCustomerLoggedIn] = useState(false);
+  const [customerName, setCustomerName] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -53,6 +54,7 @@ export function SiteHeader() {
       const staff = !!readAdminSession() || isStaffUser(auth?.user);
       setIsAdmin(staff);
       setCustomerLoggedIn(!!auth && !staff);
+      setCustomerName(auth && !staff ? `${auth.user.firstName} ${auth.user.lastName}`.trim() : '');
     };
     sync();
     window.addEventListener(AUTH_SESSION_EVENT, sync);
@@ -97,22 +99,32 @@ export function SiteHeader() {
           title="Logout"
           aria-label="Logout"
         >
-          Logout
+          {customerLoggedIn ? `${customerName || 'Account'} · Sign out` : 'Logout'}
         </button>
       );
     }
-    const href = '/account?mode=login';
     const accountActive = pathname === '/account' || pathname.startsWith('/account/');
     return (
-      <Link
-        href={href}
-        onClick={mobile ? () => setOpen(false) : undefined}
-        className={mobile ? mobileNavLinkClass(accountActive) : navLinkClass(accountActive)}
-        data-tooltip="Sign in"
-        title="Sign in"
-      >
-        Sign in / Sign up
-      </Link>
+      <span className={mobile ? 'flex flex-col gap-2' : 'flex items-center gap-3'}>
+        <Link
+          href="/account?mode=login"
+          onClick={mobile ? () => setOpen(false) : undefined}
+          className={mobile ? mobileNavLinkClass(accountActive) : navLinkClass(accountActive)}
+          data-tooltip="Sign in"
+          title="Sign in"
+        >
+          Sign in
+        </Link>
+        <Link
+          href="/account?mode=register"
+          onClick={mobile ? () => setOpen(false) : undefined}
+          className={mobile ? mobileNavLinkClass(false) : navLinkClass(false)}
+          data-tooltip="Sign up"
+          title="Sign up"
+        >
+          Sign up
+        </Link>
+      </span>
     );
   }
 

@@ -37,7 +37,6 @@ const createUserSchema = z.object({
   country: z.string().max(100).optional().or(z.literal('')),
   marketingOptIn: z.boolean().optional(),
   accountType: z.enum([
-    'customer',
     'owner',
     'manager',
     'cashier',

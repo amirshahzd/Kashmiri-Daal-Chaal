@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { Plus, Printer, Save, Trash2 } from 'lucide-react';
 import { api } from '@/lib/api';
+import { readAuthSession } from '@/lib/auth-session';
 import { formatPKR } from '@/lib/data';
 import { Image3D } from '@/components/Image3D';
 import {
@@ -285,7 +286,10 @@ export function AttendanceRegister() {
     if (viewOnly) return;
     if (!window.confirm(`Remove ${emp.name} (${emp.empId}) from the database?`)) return;
     try {
-      await api(`/hr/employees/${emp.id}`, { method: 'DELETE' });
+      await api(`/hr/employees/${emp.id}`, {
+        method: 'DELETE',
+        token: readAuthSession()?.accessToken,
+      });
       setStatus(`${emp.name} removed`);
       await loadWeek();
     } catch (err) {

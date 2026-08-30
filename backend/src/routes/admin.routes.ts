@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { asyncHandler, authenticate, requirePermission, validate } from '../middleware';
+import { asyncHandler, authenticate, requirePermission, requireRoles, validate } from '../middleware';
 import * as paymentService from '../services/payment.service';
 import * as inventoryService from '../services/inventory.service';
 import * as dashboardService from '../services/dashboard.service';
@@ -306,7 +306,8 @@ hr.post(
 
 hr.delete(
   '/employees/:id',
-  hrRegisterAccess,
+  authenticate,
+  requireRoles('owner'),
   asyncHandler(async (req, res) => {
     return ok(res, await hrService.deleteEmployee(param(req.params.id)));
   })
@@ -577,7 +578,7 @@ suppliers.get(
     try {
       if (await (await import('../config/db')).pool.query('SELECT 1').then(() => true).catch(() => false)) {
         try {
-          const rows = await query(`SELECT * FROM suppliers ORDER BY name`);
+          const rows = await query(`SELECT * FROM suppliers WHERE is_active = TRUE ORDER BY name`);
           if (rows.rowCount) return ok(res, { suppliers: rows.rows, storage: 'postgres' });
         } catch {
           /* file */
@@ -640,6 +641,31 @@ suppliers.post(
     const { supplierFileStore } = await import('../services/supplier-file.store');
     const supplier = supplierFileStore.create(body);
     return created(res, { supplier, storage: 'file' });
+  })
+);
+
+suppliers.delete(
+  '/:id',
+  authenticate,
+  requireRoles('owner'),
+  asyncHandler(async (req, res) => {
+    const id = param(req.params.id);
+    try {
+      const result = await query(
+        `UPDATE suppliers SET is_active = FALSE, updated_at = NOW()
+         WHERE id = $1 AND is_active = TRUE RETURNING id, name`,
+        [id]
+      );
+      if (result.rowCount) return ok(res, { deleted: true, ...result.rows[0], storage: 'postgres' });
+    } catch {
+      /* file fallback */
+    }
+    try {
+      const { supplierFileStore } = await import('../services/supplier-file.store');
+      return ok(res, { deleted: true, ...supplierFileStore.delete(id), storage: 'file' });
+    } catch {
+      throw new AppError(404, 'SUPPLIER_NOT_FOUND', 'Supplier not found');
+    }
   })
 );
 

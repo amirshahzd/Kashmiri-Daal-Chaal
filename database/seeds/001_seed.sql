@@ -35,7 +35,8 @@ INSERT INTO roles (id, name, display_name, description, is_system) VALUES
   ('b0000000-0000-4000-8000-000000000004', 'kitchen', 'Kitchen Staff', 'Kitchen display and prep', TRUE),
   ('b0000000-0000-4000-8000-000000000005', 'delivery', 'Delivery Staff', 'Delivery assignment and tracking', TRUE),
   ('b0000000-0000-4000-8000-000000000006', 'employee', 'Employee', 'Basic employee portal', TRUE),
-  ('b0000000-0000-4000-8000-000000000007', 'customer', 'Customer', 'Customer account access', TRUE);
+  ('b0000000-0000-4000-8000-000000000007', 'customer', 'Customer', 'Customer account access', TRUE)
+ON CONFLICT (name) DO NOTHING;
 
 INSERT INTO permissions (code, module, description) VALUES
   ('dashboard.view', 'dashboard', 'View dashboard'),
@@ -61,27 +62,27 @@ INSERT INTO permissions (code, module, description) VALUES
 
 -- Owner gets all permissions
 INSERT INTO role_permissions (role_id, permission_id)
-SELECT 'b0000000-0000-4000-8000-000000000001', id FROM permissions;
+SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'owner';
 
 -- Manager permissions
 INSERT INTO role_permissions (role_id, permission_id)
-SELECT 'b0000000-0000-4000-8000-000000000002', id FROM permissions
-WHERE code NOT IN ('settings.manage', 'payroll.manage');
+SELECT r.id, p.id FROM roles r CROSS JOIN permissions p
+WHERE r.name = 'manager' AND p.code NOT IN ('settings.manage', 'payroll.manage');
 
 -- Cashier
 INSERT INTO role_permissions (role_id, permission_id)
-SELECT 'b0000000-0000-4000-8000-000000000003', id FROM permissions
-WHERE code IN ('dashboard.view', 'orders.view', 'orders.manage', 'menu.view', 'customers.view');
+SELECT r.id, p.id FROM roles r CROSS JOIN permissions p
+WHERE r.name = 'cashier' AND p.code IN ('dashboard.view', 'orders.view', 'orders.manage', 'menu.view', 'customers.view');
 
 -- Kitchen
 INSERT INTO role_permissions (role_id, permission_id)
-SELECT 'b0000000-0000-4000-8000-000000000004', id FROM permissions
-WHERE code IN ('orders.view', 'kds.view', 'menu.view');
+SELECT r.id, p.id FROM roles r CROSS JOIN permissions p
+WHERE r.name = 'kitchen' AND p.code IN ('orders.view', 'kds.view', 'menu.view');
 
 -- Delivery
 INSERT INTO role_permissions (role_id, permission_id)
-SELECT 'b0000000-0000-4000-8000-000000000005', id FROM permissions
-WHERE code IN ('orders.view', 'delivery.manage');
+SELECT r.id, p.id FROM roles r CROSS JOIN permissions p
+WHERE r.name = 'delivery' AND p.code IN ('orders.view', 'delivery.manage');
 
 -- bcrypt hash for Password123!
 INSERT INTO users (id, email, password_hash, first_name, last_name, status, email_verified_at) VALUES
@@ -95,9 +96,9 @@ INSERT INTO users (id, email, password_hash, first_name, last_name, status, emai
 -- Note: Real bcrypt will be generated at seed runtime in Node. Placeholder above replaced by seed script.
 
 INSERT INTO user_roles (user_id, role_id, branch_id) VALUES
-  ('c0000000-0000-4000-8000-000000000001', 'b0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000001'),
-  ('c0000000-0000-4000-8000-000000000002', 'b0000000-0000-4000-8000-000000000002', 'a0000000-0000-4000-8000-000000000001'),
-  ('c0000000-0000-4000-8000-000000000003', 'b0000000-0000-4000-8000-000000000007', 'a0000000-0000-4000-8000-000000000001');
+  ('c0000000-0000-4000-8000-000000000001', (SELECT id FROM roles WHERE name = 'owner'), 'a0000000-0000-4000-8000-000000000001'),
+  ('c0000000-0000-4000-8000-000000000002', (SELECT id FROM roles WHERE name = 'manager'), 'a0000000-0000-4000-8000-000000000001'),
+  ('c0000000-0000-4000-8000-000000000003', (SELECT id FROM roles WHERE name = 'customer'), 'a0000000-0000-4000-8000-000000000001');
 
 INSERT INTO customers (id, user_id, first_name, last_name, email, phone, loyalty_points) VALUES
   ('d0000000-0000-4000-8000-000000000001', 'c0000000-0000-4000-8000-000000000003',

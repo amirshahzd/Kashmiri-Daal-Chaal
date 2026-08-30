@@ -3,6 +3,7 @@
 import { use, useEffect, useMemo, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { BRANCH, formatPKR } from '@/lib/data';
+import { goToPreviousPage } from '@/components/BackButton';
 import {
   formatType,
   generateDeliveryBarcode,
@@ -35,6 +36,29 @@ export default function PrintSlipPage({ params }: { params: Promise<{ id: string
   const { id } = use(params);
   const [order, setOrder] = useState<OpsOrder | null>(null);
 
+  function goBackFromSlip() {
+    const returnTo = new URLSearchParams(window.location.search).get('returnTo');
+    if (returnTo?.startsWith('/') && !returnTo.startsWith('//')) {
+      window.location.assign(returnTo);
+      return;
+    }
+
+    const referrer = document.referrer;
+    if (referrer) {
+      try {
+        const referrerUrl = new URL(referrer);
+        if (referrerUrl.origin === window.location.origin && referrerUrl.href !== window.location.href) {
+          window.location.assign(`${referrerUrl.pathname}${referrerUrl.search}${referrerUrl.hash}`);
+          return;
+        }
+      } catch {
+        /* Ignore malformed referrers and use browser history below. */
+      }
+    }
+
+    goToPreviousPage();
+  }
+
   useEffect(() => {
     const found = getOpsOrder(id);
     if (found) setOrder(withBarcode(found));
@@ -64,8 +88,8 @@ export default function PrintSlipPage({ params }: { params: Promise<{ id: string
           </button>
           <button
             type="button"
-            onClick={() => window.history.back()}
-            className="min-w-[120px] rounded-full border-2 border-ink bg-white px-5 py-2.5 text-sm font-semibold text-ink shadow-sm hover:bg-ink/5"
+            onClick={goBackFromSlip}
+            className="kdc-button kdc-button-primary min-w-[120px]"
           >
             Back
           </button>
@@ -91,8 +115,8 @@ export default function PrintSlipPage({ params }: { params: Promise<{ id: string
         </button>
         <button
           type="button"
-          onClick={() => window.history.back()}
-          className="flex-1 rounded-full border-2 border-ink bg-white px-5 py-3 text-base font-semibold text-ink shadow-sm hover:bg-ink/5"
+          onClick={goBackFromSlip}
+          className="kdc-button kdc-button-primary flex-1 !py-3 text-base font-semibold"
         >
           Back
         </button>

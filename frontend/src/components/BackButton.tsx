@@ -13,7 +13,8 @@ const btnClass =
  */
 export function goToPreviousPage() {
   if (typeof window === 'undefined') return;
-  window.history.back();
+  if (window.history.length > 1) window.history.back();
+  else window.location.assign('/');
 }
 
 /** Back always returns to the previous page in the browser history. */
