@@ -5,6 +5,7 @@ import * as authService from '../services/auth.service';
 import { ok } from '../utils/errors';
 import { env } from '../config/env';
 import { AuthedRequest } from '../types';
+import { param } from '../utils/params';
 
 const router = Router();
 
@@ -36,15 +37,20 @@ const createUserSchema = z.object({
   postcode: z.string().max(20).optional().or(z.literal('')),
   country: z.string().max(100).optional().or(z.literal('')),
   marketingOptIn: z.boolean().optional(),
-  accountType: z.enum([
-    'owner',
-    'manager',
-    'cashier',
-    'kitchen',
-    'delivery',
-    'employee',
-    'admin',
-  ]),
+  accessMode: z
+    .enum(['view_only', 'view_manage', 'full_access', 'admin', 'owner', 'manager', 'cashier', 'kitchen', 'delivery', 'employee'])
+    .optional(),
+  accountType: z
+    .enum([
+      'owner',
+      'manager',
+      'cashier',
+      'kitchen',
+      'delivery',
+      'employee',
+      'admin',
+    ])
+    .optional(),
 });
 
 const loginSchema = z.object({
@@ -194,6 +200,14 @@ router.get(
   '/accounts',
   asyncHandler(async (_req, res) => {
     return ok(res, await authService.listAccounts());
+  })
+);
+
+router.delete(
+  '/accounts/:id',
+  optionalAuth,
+  asyncHandler(async (req: AuthedRequest, res) => {
+    return ok(res, await authService.deleteAccount(param(req.params.id), req.user));
   })
 );
 
