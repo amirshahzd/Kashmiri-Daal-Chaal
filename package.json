@@ -13,6 +13,9 @@
     "dev:web": "npm run dev -w frontend",
     "build": "npm run build -w backend && npm run build -w frontend",
     "test": "npm run test -w backend && npm run test -w frontend",
+    "test:perf": "npm run test:perf -w backend",
+    "test:e2e": "playwright test",
+    "test:mobile": "playwright test e2e/mobile-layout.spec.ts",
     "db:migrate": "npm run db:migrate -w backend",
     "db:seed": "npm run db:seed -w backend",
     "lint": "npm run lint -w backend && npm run lint -w frontend"
@@ -21,6 +24,7 @@
     "node": ">=20"
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.1",
     "concurrently": "^9.1.2"
   }
 }

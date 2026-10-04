@@ -27,9 +27,11 @@ export function signAccessToken(user: AuthUser): string {
 }
 
 export function signRefreshToken(userId: string): string {
-  return jwt.sign({ sub: userId, typ: 'refresh' }, env.jwtRefreshSecret, {
-    expiresIn: env.jwtRefreshExpires,
-  } as jwt.SignOptions);
+  return jwt.sign(
+    { sub: userId, typ: 'refresh', jti: crypto.randomUUID() },
+    env.jwtRefreshSecret,
+    { expiresIn: env.jwtRefreshExpires } as jwt.SignOptions
+  );
 }
 
 export function verifyAccessToken(token: string): AccessPayload {

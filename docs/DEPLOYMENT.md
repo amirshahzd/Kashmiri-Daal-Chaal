@@ -34,17 +34,25 @@ docker compose exec api npm run db:seed
 
 ## GitHub Actions
 
-Workflow `.github/workflows/ci.yml`:
+Workflow `.github/workflows/ci.yml` runs on every push and every pull request. A one-line change runs the same suite as a large one. There is no path filter.
 
-- Install, lint, test backend
-- Build frontend
-- On `main` push: build & push Docker images (configure registry secrets)
+Required checks before `main` is treated as releasable:
 
-Required GitHub secrets:
+- `backend` — unit and HTTP tests, then the API build
+- `frontend` — library tests, then the Next.js build
+- `e2e` — Playwright journeys on desktop and iPhone 13
+- `mobile` — layout checks at 360px, iPhone 13, and Pixel 7
+- `performance` — API p95 budget and mobile Lighthouse
 
-- `DATABASE_URL` (for migration job if used)
+Protect `main` in GitHub with those five check names. Pull requests never deploy.
+
+The `deploy` job runs only after a push to `main` when every test job is green. It builds and pushes `kdc-api` and `kdc-web` when `DOCKER_USERNAME` and `DOCKER_PASSWORD` are set. If those secrets are missing, deploy is skipped and the test result still stands.
+
+Required GitHub secrets for a real deploy:
+
 - `DOCKER_USERNAME` / `DOCKER_PASSWORD`
-- `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET`
+- `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET` on the host `.env`
+- `DATABASE_URL` on the host `.env`
 
 ## Cloud checklist
 

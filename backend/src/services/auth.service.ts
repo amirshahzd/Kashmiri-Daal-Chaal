@@ -34,6 +34,7 @@ export type RegisterInput = {
   marketingOptIn?: boolean;
   /** Only used by admin create-user; public register ignores this */
   accountType?: 'customer' | RoleName | 'admin';
+  accessMode?: 'view_only' | 'view_manage' | 'full_access' | 'admin' | RoleName;
 };
 
 const ALREADY_REGISTERED_MSG =
@@ -91,8 +92,11 @@ async function dbAvailable(): Promise<boolean> {
   }
 }
 
-function resolveRoles(accountType?: string): RoleName[] {
-  const type = (accountType || 'customer').toLowerCase();
+function resolveRoles(accountType?: string, accessMode?: string): RoleName[] {
+  const type = (accessMode || accountType || 'customer').toLowerCase();
+  if (type === 'view_only') return ['employee'];
+  if (type === 'view_manage') return ['cashier'];
+  if (type === 'full_access') return ['manager'];
   if (type === 'customer' || !type) return ['customer'];
   // Admin is the top role (owner is the same access level internally)
   if (type === 'admin' || type === 'owner') return ['owner'];
@@ -326,9 +330,9 @@ export async function createUserByAdmin(input: RegisterInput, actor?: AuthUser |
     throw new AppError(400, 'PHONE_REQUIRED', 'Contact number is required');
   }
 
-  const access = (input.accountType || 'employee').toLowerCase();
-  const roles = resolveRoles(access === 'admin' ? 'admin' : access);
-  const payload = { ...input, phone };
+  const access = (input.accessMode || input.accountType || 'employee').toLowerCase();
+  const roles = resolveRoles(access === 'admin' ? 'admin' : access, access);
+  const payload = { ...input, phone, accountType: roles[0] as RegisterInput['accountType'] };
 
   if (await dbAvailable()) {
     try {
@@ -739,6 +743,41 @@ export async function resetPassword(token: string, newPassword: string) {
   authFileStore.markPasswordResetUsed(fileRow.id);
   authFileStore.revokeAllUserRefresh(fileRow.user_id);
   return { message: 'Password updated successfully' };
+}
+
+export async function deleteAccount(targetUserId: string, actor?: AuthUser | null) {
+  if (!actor) throw new AppError(401, 'UNAUTHORIZED', 'Authentication required');
+  const isOwner = actor.roles.includes('owner');
+  const isManager = actor.roles.includes('manager');
+  if (!isOwner && !isManager) {
+    throw new AppError(403, 'FORBIDDEN', 'Only admin or manager may delete accounts');
+  }
+  if (actor.id === targetUserId) {
+    throw new AppError(400, 'CANNOT_DELETE_SELF', 'You cannot delete your own account');
+  }
+
+  if (await dbAvailable()) {
+    try {
+      const row = await query<{ id: string }>(`SELECT id FROM users WHERE id = $1`, [targetUserId]);
+      if (row.rowCount) {
+        await query(`DELETE FROM refresh_tokens WHERE user_id = $1`, [targetUserId]);
+        await query(`DELETE FROM user_roles WHERE user_id = $1`, [targetUserId]);
+        await query(`DELETE FROM customers WHERE user_id = $1`, [targetUserId]).catch(() => undefined);
+        await query(`DELETE FROM users WHERE id = $1`, [targetUserId]);
+        return { deleted: true, message: 'Account deleted successfully.' };
+      }
+    } catch (err) {
+      if (err instanceof AppError) throw err;
+    }
+  }
+
+  const removed = authFileStore.deleteUser(targetUserId);
+  if (!removed) {
+    throw new AppError(404, 'USER_NOT_FOUND', 'User not found');
+  }
+  authFileStore.deleteCustomerByUserId(targetUserId);
+  authFileStore.revokeAllUserRefresh(targetUserId);
+  return { deleted: true, message: 'Account deleted successfully.' };
 }
 
 export async function listAccounts() {
