@@ -57,6 +57,7 @@ export function createApp() {
       max: env.rateLimitMax,
       standardHeaders: true,
       legacyHeaders: false,
+      skip: (req) => req.path === '/health',
     })
   );
 
