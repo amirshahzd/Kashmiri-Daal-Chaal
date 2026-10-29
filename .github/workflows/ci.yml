@@ -36,7 +36,7 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: Install frontend
         working-directory: frontend
-        run: npm ci
+        run: npm ci --include=optional
       - name: Diagnose Lightning CSS native package
         working-directory: frontend
         run: |
