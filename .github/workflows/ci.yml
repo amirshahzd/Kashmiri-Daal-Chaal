@@ -37,6 +37,9 @@ jobs:
       - name: Install frontend
         working-directory: frontend
         run: npm ci --include=optional
+      - name: Install Lightning CSS Linux native package
+        working-directory: frontend
+        run: npm install --no-save --include=optional lightningcss-linux-x64-gnu@1.32.0
       - name: Diagnose Lightning CSS native package
         working-directory: frontend
         run: |
