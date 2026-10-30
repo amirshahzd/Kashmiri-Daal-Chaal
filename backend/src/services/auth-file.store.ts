@@ -149,6 +149,28 @@ export const authFileStore = {
     return ensureStore().users.map(({ password_hash: _p, ...safe }) => safe);
   },
 
+  deleteUser(id: string) {
+    const store = ensureStore();
+    const before = store.users.length;
+    store.users = store.users.filter((u) => u.id !== id);
+    if (store.users.length !== before) {
+      save(store);
+      return true;
+    }
+    return false;
+  },
+
+  deleteCustomerByUserId(userId: string) {
+    const store = ensureStore();
+    const before = store.customers.length;
+    store.customers = store.customers.filter((c) => c.user_id !== userId);
+    if (store.customers.length !== before) {
+      save(store);
+      return true;
+    }
+    return false;
+  },
+
   listCustomers() {
     return ensureStore().customers;
   },
