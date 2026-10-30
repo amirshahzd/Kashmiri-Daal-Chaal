@@ -35,8 +35,8 @@
   --color-ink: var(--kdc-ink);
   --color-muted: var(--kdc-muted);
   --color-surface: var(--kdc-surface);
-  --font-display: var(--font-display);
-  --font-sans: var(--font-body);
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-sans: Arial, Helvetica, sans-serif;
 }
 
 * {
@@ -50,7 +50,7 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-body), Georgia, serif;
+  font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
 
