@@ -1,4 +1,4 @@
-name: CI
+﻿name: CI
 
 on:
   push:
@@ -59,6 +59,10 @@ jobs:
 
       - name: Install project dependencies
         run: npm ci
+
+      - name: Install Linux native packages
+        working-directory: frontend
+        run: npm install --no-save --include=optional lightningcss-linux-x64-gnu@1.32.0 @tailwindcss/oxide-linux-x64-gnu@4.3.2
 
       - name: Install Chromium and system dependencies
         run: npx playwright install --with-deps chromium
