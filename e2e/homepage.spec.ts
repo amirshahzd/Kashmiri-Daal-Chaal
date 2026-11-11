@@ -1,19 +1,13 @@
-
 import { test, expect } from '@playwright/test';
+import { HomePage } from '../pages/HomePage';
 
 test('homepage displays restaurant branding and navigation', async ({ page }) => {
-  await page.goto('/');
+  const homePage = new HomePage(page);
 
-  await expect(
-    page.getByText('Kashmiri Daal Chawal', { exact: true }).first()
-  ).toBeVisible();
+  await homePage.open();
 
-  await expect(
-    page.getByRole('heading', {
-      name: 'Kashmiri comfort, plated with warmth.',
-    })
-  ).toBeVisible();
-
-  await expect(page.getByRole('link', { name: 'View Menu' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Order Now' })).toBeVisible();
+  await expect(homePage.restaurantBranding).toBeVisible();
+  await expect(homePage.mainHeading).toBeVisible();
+  await expect(homePage.viewMenuLink).toBeVisible();
+  await expect(homePage.orderNowLink).toBeVisible();
 });
