@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, Suspense, useEffect, useState } from 'react';
+import { FormEvent, Suspense, useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { BRANCH, formatPKR } from '@/lib/data';
 import {
@@ -26,17 +26,23 @@ function DriverInner() {
   const [success, setSuccess] = useState('');
   const [busy, setBusy] = useState(false);
 
-  function lookup(value: string) {
-    setError('');
-    setSuccess('');
-    const found = findOrderByBarcode(value);
-    if (!found) {
-      setOrder(null);
-      setError('No order found for this barcode. Check the slip number.');
-      return;
-    }
-    setOrder(found);
+  const lookup = useCallback((value: string) => {
+  setError('');
+  setSuccess('');
+  const found = findOrderByBarcode(value);
+
+  if (!found) {
+    setOrder(null);
+    setError('No order found for this barcode. Check the slip number.');
+    return;
   }
+
+  setOrder(found);
+}, []);
+
+useEffect(() => {
+  if (initial) lookup(initial);
+}, [initial, lookup]);
 
   useEffect(() => {
     if (initial) lookup(initial);

@@ -7,18 +7,18 @@ import { CATEGORIES, formatPKR } from '@/lib/data';
 import { MenuImageFx } from '@/components/MenuImageFx';
 import { useLiveMenuItems } from '@/lib/use-live-menu';
 
-/** Full-bleed menu banner with switchable category views (3D tilt cards). */
-export function MenuBanner() {
-  const [active, setActive] = useState(CATEGORIES[0]?.slug || 'mains');
-  const { items: liveItems } = useLiveMenuItems();
-
-  const MENU_ORDER = [
+ const MENU_ORDER = [
     'boiled-rice',
     'chicken-pulao',
     'chicken-biryani',
     'shami-kebab',
   ];
 
+/** Full-bleed menu banner with switchable category views (3D tilt cards). */
+export function MenuBanner() {
+  const [active, setActive] = useState(CATEGORIES[0]?.slug || 'mains');
+  const { items: liveItems } = useLiveMenuItems();
+ 
   const items = useMemo(() => {
     const list = liveItems
       .filter((i) => i.categorySlug === active && i.isAvailable !== false)

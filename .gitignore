@@ -7,3 +7,7 @@ dist
 coverage
 .DS_Store
 .turbo
+# Playwright generated files
+/test-results/
+/playwright-report/
+/playwright/.cache/

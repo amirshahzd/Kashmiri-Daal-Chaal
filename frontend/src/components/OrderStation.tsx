@@ -567,7 +567,7 @@ export function ManagerStation({ role, actor }: { role: string; actor: string })
 }
 
 /** Manager page: full status for orders already left Ready for delivery. */
-export function ManagerOrderDeliveryPage({ role, actor }: { role: string; actor: string }) {
+export function ManagerOrderDeliveryPage({ actor }: { role: string; actor: string }) {
   const orders = useLiveOrders();
   const [msg, setMsg] = useState('');
   const [statusOrder, setStatusOrder] = useState<OpsOrder | null>(null);

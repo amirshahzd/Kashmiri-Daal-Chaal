@@ -6,6 +6,13 @@ import { CATEGORIES } from '@/lib/data';
 import { useLiveMenuItems } from '@/lib/use-live-menu';
 import { MenuItemCard } from '@/components/MenuItemCard';
 
+const MENU_ORDER = [
+    'boiled-rice',
+    'chicken-pulao',
+    'chicken-biryani',
+    'shami-kebab',
+  ];
+
 export default function MenuPage() {
   const [category, setCategory] = useState('all');
   const [search, setSearch] = useState('');
@@ -13,13 +20,7 @@ export default function MenuPage() {
   const { items: liveItems } = useLiveMenuItems();
 
   /** Preferred plate order: rice, pulao, biryani, shami kebab, then the rest. */
-  const MENU_ORDER = [
-    'boiled-rice',
-    'chicken-pulao',
-    'chicken-biryani',
-    'shami-kebab',
-  ];
-
+ 
   const items = useMemo(() => {
     const q = search.trim().toLowerCase();
     const filtered = liveItems.filter((item) => {

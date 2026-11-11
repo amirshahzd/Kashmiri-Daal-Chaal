@@ -1,20 +1,7 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, Outfit } from 'next/font/google';
 import './globals.css';
 import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
 import { NavTooltips } from '@/components/NavTooltips';
-
-const display = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-display',
-});
-
-const body = Outfit({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-body',
-});
 
 export const metadata: Metadata = {
   title: {
@@ -30,11 +17,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${display.variable} ${body.variable} antialiased kdc-grain`}
+        className="antialiased kdc-grain"
         suppressHydrationWarning
       >
         <NavTooltips />

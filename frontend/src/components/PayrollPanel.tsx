@@ -263,18 +263,18 @@ export function PayrollPanel({ onOpenAttendance }: Props) {
     return canvasRef.current;
   }
 
-  function clearSignature() {
-    const canvas = getCanvas();
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = '#1a1a1a';
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-  }
+  const clearSignature = useCallback(() => {
+  const canvas = getCanvas();
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+}, []);
 
   function pointerPos(e: PointerEvent<HTMLCanvasElement>) {
     const canvas = e.currentTarget;
@@ -361,7 +361,7 @@ export function PayrollPanel({ onOpenAttendance }: Props) {
       const t = window.setTimeout(() => clearSignature(), 50);
       return () => window.clearTimeout(t);
     }
-  }, [payTarget]);
+  }, [payTarget, clearSignature]);
 
   return (
     <div id="payroll-print-area">
